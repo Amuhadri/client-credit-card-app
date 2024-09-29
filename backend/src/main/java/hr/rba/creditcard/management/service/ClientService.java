@@ -41,4 +41,9 @@ public class ClientService {
         }
     }
 
+    public void deleteClientByOib(String oib) {
+        Optional<Client> client = clientRepository.findByOib(oib);
+        client.ifPresent(clientRepository::delete);
+    }
+
 }

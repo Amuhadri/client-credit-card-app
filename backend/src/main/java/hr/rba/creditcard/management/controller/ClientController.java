@@ -77,17 +77,37 @@ public class ClientController {
 
     @PutMapping("/{oib}")
     public ResponseEntity<Client> updateClient(@PathVariable String oib, @RequestBody Client updatedClient) {
-        logger.info("Received request to update client with OIB: {}", oib);  // Logiraj primitak zahtjeva
+        logger.info("Received request to update client with OIB: {}", oib);
 
         try {
             Client client = clientService.updateClient(oib, updatedClient);
-            logger.info("Client with OIB {} updated successfully: {}", oib, client);  // Logiraj uspješno ažuriranje
+            logger.info("Client with OIB {} updated successfully: {}", oib, client);
             return new ResponseEntity<>(client, HttpStatus.OK);
         } catch (RuntimeException e) {
-            logger.error("Client with OIB {} not found, update failed", oib);  // Logiraj grešku ako klijent nije pronađen
+            logger.error("Client with OIB {} not found, update failed", oib);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @DeleteMapping("/{oib}")
+    public ResponseEntity<String> deleteClientByOib(@PathVariable String oib) {
+        logger.info("Received request to delete client with OIB: {}", oib);
+
+        Optional<Client> client = clientService.findClientByOib(oib);
+        if (client.isPresent()) {
+            clientService.deleteClientByOib(oib);
+            logger.info("Client with OIB {} deleted successfully", oib);
+            return new ResponseEntity<>("Client deleted successfully", HttpStatus.OK);
+        } else {
+            logger.warn("Client with OIB {} not found, deletion failed", oib);
+            return new ResponseEntity<>("Client not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+
+
 
 
 
