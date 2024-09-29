@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -18,10 +19,13 @@ public class ClientService {
     private ClientRepository clientRepository;
 
     public List<Client> findAllClients() {
-        logger.info("Fetching all clients");
         List<Client> clients = clientRepository.findAll();
-        logger.info("Found {} clients", clients.size());
         return clients;
     }
+
+    public Optional<Client> findClientByOib(String oib) {
+        return clientRepository.findByOib(oib);
+    }
+
 
 }
