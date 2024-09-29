@@ -75,6 +75,20 @@ public class ClientController {
         }
     }
 
+    @PutMapping("/{oib}")
+    public ResponseEntity<Client> updateClient(@PathVariable String oib, @RequestBody Client updatedClient) {
+        logger.info("Received request to update client with OIB: {}", oib);  // Logiraj primitak zahtjeva
+
+        try {
+            Client client = clientService.updateClient(oib, updatedClient);
+            logger.info("Client with OIB {} updated successfully: {}", oib, client);  // Logiraj uspješno ažuriranje
+            return new ResponseEntity<>(client, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            logger.error("Client with OIB {} not found, update failed", oib);  // Logiraj grešku ako klijent nije pronađen
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
 }

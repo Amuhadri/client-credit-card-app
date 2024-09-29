@@ -28,6 +28,17 @@ public class ClientService {
         return clientRepository.save(client);
     }
 
-
+    public Client updateClient(String oib, Client updatedClient) {
+        Optional<Client> existingClient = findClientByOib(oib);
+        if (existingClient.isPresent()) {
+            Client client = existingClient.get();
+            client.setFirstName(updatedClient.getFirstName());
+            client.setLastName(updatedClient.getLastName());
+            client.setCardStatus(updatedClient.getCardStatus());
+            return clientRepository.save(client);
+        } else {
+            throw new RuntimeException("Client not found");
+        }
+    }
 
 }
