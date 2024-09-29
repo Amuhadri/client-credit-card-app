@@ -18,14 +18,16 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    public List<Client> findAllClients() {
-        List<Client> clients = clientRepository.findAll();
-        return clients;
-    }
+    public List<Client> findAllClients() {return clientRepository.findAll();}
 
     public Optional<Client> findClientByOib(String oib) {
         return clientRepository.findByOib(oib);
     }
+
+    public Client saveClient(Client client) {
+        return clientRepository.save(client);
+    }
+
 
 
 }
