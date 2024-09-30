@@ -44,7 +44,9 @@ This project leverages the following technologies:
     docker-compose up --build
 4. Access the application:
     Frontend (React): The application UI will be available at http://localhost:3000.
-    Backend (Spring Boot): The API will be accessible at http://localhost:8080.
+    Backend (Spring Boot): 
+    - Client API (Spring Boot): The Client API will be accessible at http://localhost:8080.
+    - CardRequest API (Spring Boot): The CardRequest API will be accessible at http://localhost:8081.
     
 ### Post Setup
 
