@@ -1,6 +1,6 @@
 import React from 'react';
-import { toast } from 'react-toastify'; // Import react-toastify
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for toast
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Client {
     id: number;
@@ -13,8 +13,8 @@ interface Client {
 interface ClientTableProps {
     clients: Client[];
     onEdit: (client: Client) => void;
-    onDelete: (oib: string) => Promise<boolean>; // onDelete now returns Promise<boolean> for success/failure
-    onSendClientData: (oib: string) => void; // Add this new prop for sending data
+    onDelete: (oib: string) => Promise<boolean>;
+    onSendClientData: (oib: string) => void;
 }
 
 const ClientTable: React.FC<ClientTableProps> = ({ clients, onEdit, onDelete, onSendClientData }) => {
@@ -54,7 +54,7 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients, onEdit, onDelete, on
                         <button onClick={() => handleDeleteClick(client.oib)} style={{ marginLeft: '10px' }}>Delete</button>
                         <button onClick={() => onSendClientData(client.oib)} style={{ marginLeft: '10px' }}>
                             Send
-                        </button> {/* New Send Button */}
+                        </button>
                     </td>
                 </tr>
             ))}
@@ -62,5 +62,6 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients, onEdit, onDelete, on
         </table>
     );
 };
+
 
 export default ClientTable;

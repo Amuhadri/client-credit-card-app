@@ -35,7 +35,6 @@ const ClientManagement: React.FC = () => {
 
         fetchClients();
 
-        // Kreiraj WebSocket vezu za ažuriranja statusa kartice
         const socket = new WebSocket('ws://localhost:8080/card-status-updates');
 
         socket.onopen = () => {
@@ -45,10 +44,8 @@ const ClientManagement: React.FC = () => {
         socket.onmessage = (event) => {
             const updatedClient = JSON.parse(event.data);
 
-            // Prikaži obavijest o promjeni statusa kartice
             toast.info(`Status for oib: ${updatedClient.oib} has changed! New status is ${updatedClient.cardStatus}`, { position: 'top-right' });
 
-            // Ažuriraj stanje klijenata
             setClients((prevClients) =>
                 prevClients.map((client) =>
                     client.oib === updatedClient.oib ? { ...client, cardStatus: updatedClient.cardStatus } : client
@@ -60,7 +57,6 @@ const ClientManagement: React.FC = () => {
             console.log('WebSocket connection closed');
         };
 
-        // Očisti WebSocket kada se komponenta demontira
         return () => {
             socket.close();
         };
@@ -111,8 +107,21 @@ const ClientManagement: React.FC = () => {
 
     const handleSendClientData = async (oib: string) => {
         try {
-            const response = await axios.post(`http://localhost:8080/api/clients/send/${oib}`);
-            toast.success(`Client data sent successfully: ${response.data}`, { position: 'top-right' });
+            const client = clients.find(c => c.oib === oib);
+            if (!client) {
+                toast.error(`Client with OIB: ${oib} not found`, { position: 'top-right' });
+                return;
+            }
+
+            const newCardRequest = {
+                firstName: client.firstName,
+                lastName: client.lastName,
+                oib: client.oib,
+                status:client.cardStatus
+            };
+
+            const response = await axios.post('http://localhost:8081/api/v1/card-request', newCardRequest);
+            toast.success(`New card request successfully created: ${response.data}`, { position: 'top-right' });
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(`Error sending client data: ${error.message}`, { position: 'top-right' });
@@ -134,14 +143,14 @@ const ClientManagement: React.FC = () => {
         try {
             await axios.delete(`http://localhost:8080/api/clients/${oib}`);
             setClients(prevClients => prevClients.filter(client => client.oib !== oib));
-            return true; // Success
+            return true;
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(`Error deleting client: ${error.message}`, { position: 'top-right' });
             } else {
                 toast.error('An unknown error occurred while deleting client.', { position: 'top-right' });
             }
-            return false; // Failure
+            return false;
         }
     };
 
@@ -186,5 +195,6 @@ const ClientManagement: React.FC = () => {
         </div>
     );
 };
+
 
 export default ClientManagement;
