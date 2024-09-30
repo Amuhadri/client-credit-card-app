@@ -14,13 +14,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchValue, onSearchChange, onSe
                 value={searchValue}
                 onChange={onSearchChange}
                 placeholder="Enter OIB to search"
-                className="input" // Klasa za stiliziranje
+                className="input"
                 style={{ marginRight: '10px', padding: '8px', width: '250px' }} // Dodatni stilovi
             />
             <button
                 onClick={onSearchClick}
-                className="button" // Klasa za stiliziranje
-                style={{ padding: '8px 16px' }} // Dodatni stilovi
+                className="button"
+                style={{ padding: '8px 16px' }}
             >
                 Search
             </button>

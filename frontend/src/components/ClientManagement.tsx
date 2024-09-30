@@ -62,24 +62,42 @@ const ClientManagement: React.FC = () => {
         };
     }, []);
 
-    const handleSearch = () => {
+    const handleSearch = async () => {
         if (searchOib) {
-            const filteredClients = clients.filter(client =>
-                client.oib.includes(searchOib)
-            );
-            setClients(filteredClients);
-        } else {
-            axios.get<Client[]>('http://localhost:8080/api/clients')
-                .then(response => setClients(response.data))
-                .catch(error => {
-                    if (error instanceof Error) {
-                        toast.error(`Error fetching clients: ${error.message}`, { position: 'top-right' });
+            try {
+                const response = await axios.get<Client>(`http://localhost:8080/api/clients/${searchOib}`);
+                setClients([response.data]);
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    if (error.response && error.response.status === 404) {
+                        toast.error(`Client with OIB: ${searchOib} not found.`, { position: 'top-right' });
+                        setClients([]);
                     } else {
-                        toast.error('An unknown error occurred while fetching clients.', { position: 'top-right' });
+                        toast.error(`Error fetching client: ${error.message}`, { position: 'top-right' });
                     }
-                });
+                } else if (error instanceof Error) {
+                    toast.error(`Unexpected error: ${error.message}`, { position: 'top-right' });
+                } else {
+                    toast.error('An unknown error occurred while fetching client.', { position: 'top-right' });
+                }
+            }
+        } else {
+            try {
+                const response = await axios.get<Client[]>('http://localhost:8080/api/clients');
+                setClients(response.data);
+            } catch (error: unknown) {
+                if (axios.isAxiosError(error)) {
+                    toast.error(`Error fetching clients: ${error.message}`, { position: 'top-right' });
+                } else if (error instanceof Error) {
+                    toast.error(`Unexpected error: ${error.message}`, { position: 'top-right' });
+                } else {
+                    toast.error('An unknown error occurred while fetching clients.', { position: 'top-right' });
+                }
+            }
         }
     };
+
+
 
     const handleSaveClient = async (client: Client): Promise<boolean> => {
         try {
@@ -121,7 +139,7 @@ const ClientManagement: React.FC = () => {
             };
 
             const response = await axios.post('http://localhost:8081/api/v1/card-request', newCardRequest);
-            toast.success(`New card request successfully created: ${response.data}`, { position: 'top-right' });
+            toast.success(`${response.data}`, { position: 'top-right' });
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(`Error sending client data: ${error.message}`, { position: 'top-right' });
