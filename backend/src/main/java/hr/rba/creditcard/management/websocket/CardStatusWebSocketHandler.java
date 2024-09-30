@@ -17,17 +17,14 @@ public class CardStatusWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
-        // Add the session to the active sessions set
         sessions.add(session);
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-        // Remove the session when the connection is closed
         sessions.remove(session);
     }
 
-    // Method to broadcast messages to all connected clients
     public void broadcastMessage(String message) throws IOException {
         for (WebSocketSession session : sessions) {
             if (session.isOpen()) {

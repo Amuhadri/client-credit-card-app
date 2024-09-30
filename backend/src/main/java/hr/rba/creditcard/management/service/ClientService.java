@@ -19,9 +19,6 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    @Autowired
-    private ExternalApiService externalApiService;
-
     public List<Client> findAllClients() {return clientRepository.findAll();}
 
     public Optional<Client> findClientByOib(String oib) {
@@ -49,22 +46,4 @@ public class ClientService {
         Optional<Client> client = clientRepository.findByOib(oib);
         client.ifPresent(clientRepository::delete);
     }
-
-    public String sendClientData(String oib) {
-        Optional<Client> client = findClientByOib(oib);
-        if (client.isPresent()) {
-            // Client found, try sending data to external API
-            ResponseEntity<String> apiResponse = externalApiService.sendClientData(client.get());
-
-            if (apiResponse.getStatusCode().is2xxSuccessful()) {
-                return "Client found and successfully sent: " + client.get().toString() + "\nAPI Response: " + apiResponse.getBody();
-            } else {
-                return "Client found, but the API is unavailable or returned an error: " + apiResponse.getStatusCode() + " - " + apiResponse.getBody();
-            }
-        } else {
-            throw new RuntimeException("Client not found");
-        }
-    }
-
-
 }
