@@ -63,4 +63,5 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients, onEdit, onDelete, on
     );
 };
 
+
 export default ClientTable;
