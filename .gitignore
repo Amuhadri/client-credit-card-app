@@ -1,0 +1,54 @@
+# Node.js i frontend
+node_modules/
+frontend/node_modules/
+build/
+frontend/build/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Java backend
+target/
+backend/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+backend/HELP.md
+
+# IDE konfiguracijske datoteke
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# OS specifične datoteke
+.DS_Store
+
+# Environment datoteke
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Testiranje i pokrivenost
+/coverage
+
+# Docker-related datoteke
+*.env
+docker-compose.override.yml
