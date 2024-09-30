@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import rba.hr.api.entity.NewCardRequest;
 import rba.hr.api.repository.CardRequestRepository;
 
+import java.util.List;
+
 @Service
 public class CardRequestService {
 
@@ -17,14 +19,19 @@ public class CardRequestService {
     public NewCardRequest saveCardRequest(NewCardRequest newCardRequest) {
         try {
             NewCardRequest savedRequest = cardRequestRepository.save(newCardRequest);
-            logger.info("New card request saved successfully: {}", newCardRequest);
             return savedRequest;
         } catch (Exception e) {
-            logger.error("Error saving new card request: {}", e.getMessage());
             throw new RuntimeException("Failed to save card request", e);
         }
     }
 
-
+    public List<NewCardRequest> getAllCardRequests() {
+        try {
+            List<NewCardRequest> cardRequests = cardRequestRepository.findAll();
+            return cardRequests;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve card requests", e);
+        }
+    }
 
 }
