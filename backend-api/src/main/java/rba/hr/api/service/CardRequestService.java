@@ -18,8 +18,7 @@ public class CardRequestService {
 
     public NewCardRequest saveCardRequest(NewCardRequest newCardRequest) {
         try {
-            NewCardRequest savedRequest = cardRequestRepository.save(newCardRequest);
-            return savedRequest;
+            return cardRequestRepository.save(newCardRequest);
         } catch (Exception e) {
             throw new RuntimeException("Failed to save card request", e);
         }
@@ -27,8 +26,7 @@ public class CardRequestService {
 
     public List<NewCardRequest> getAllCardRequests() {
         try {
-            List<NewCardRequest> cardRequests = cardRequestRepository.findAll();
-            return cardRequests;
+            return cardRequestRepository.findAll();
         } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve card requests", e);
         }
