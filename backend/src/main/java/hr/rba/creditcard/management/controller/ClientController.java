@@ -103,24 +103,4 @@ public class ClientController {
             return new ResponseEntity<>("Client not found", HttpStatus.NOT_FOUND);
         }
     }
-
-
-    @PostMapping("/send/{oib}")
-    public ResponseEntity<String> sendClientData(@PathVariable String oib) {
-        logger.info("Received request to send client data for OIB: {}", oib);
-
-        try {
-            String response = clientService.sendClientData(oib);
-            logger.info("Client data for OIB {} sent successfully. Response: {}", oib, response);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            if (e.getMessage().equals("Client not found")) {
-                logger.warn("Client with OIB {} not found. Sending data failed.", oib);
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-            } else {
-                logger.error("Error sending client data for OIB {}: {}", oib, e.getMessage());
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-    }
 }
