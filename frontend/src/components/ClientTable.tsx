@@ -52,7 +52,11 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients, onEdit, onDelete, on
                     <td>
                         <button onClick={() => onEdit(client)} style={{ marginLeft: '10px' }}>Edit</button>
                         <button onClick={() => handleDeleteClick(client.oib)} style={{ marginLeft: '10px' }}>Delete</button>
-                        <button onClick={() => onSendClientData(client.oib)} style={{ marginLeft: '10px' }}>
+                        <button
+                            onClick={() => onSendClientData(client.oib)}
+                            style={{ marginLeft: '10px' }}
+                            disabled={client.cardStatus === 'SENT'}
+                        >
                             Send
                         </button>
                     </td>
@@ -62,6 +66,5 @@ const ClientTable: React.FC<ClientTableProps> = ({ clients, onEdit, onDelete, on
         </table>
     );
 };
-
 
 export default ClientTable;

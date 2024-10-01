@@ -101,27 +101,32 @@ const ClientManagement: React.FC = () => {
 
     const handleSaveClient = async (client: Client): Promise<boolean> => {
         try {
+            let updatedClients;
+
             if (currentClient) {
                 await axios.put(`http://localhost:8080/api/clients/${client.oib}`, client);
+                updatedClients = clients.map((c) =>
+                    c.oib === client.oib ? client : c
+                );
             } else {
                 await axios.post('http://localhost:8080/api/clients', client);
+                updatedClients = [...clients, client];
             }
 
+            setClients(updatedClients);
             setCurrentClient(null);
-
-            const response = await axios.get<Client[]>('http://localhost:8080/api/clients');
-            setClients(response.data);
 
             return true;
         } catch (error) {
             if (error instanceof Error) {
-                toast.error(`Error saving client: ${error.message}`, { position: 'top-right' });
+                toast.error(`Greška prilikom spremanja klijenta: ${error.message}`, { position: 'top-right' });
             } else {
-                toast.error('An unknown error occurred while saving client.', { position: 'top-right' });
+                toast.error('Došlo je do nepoznate greške prilikom spremanja klijenta.', { position: 'top-right' });
             }
             return false;
         }
     };
+
 
     const handleSendClientData = async (oib: string) => {
         try {
@@ -135,19 +140,42 @@ const ClientManagement: React.FC = () => {
                 firstName: client.firstName,
                 lastName: client.lastName,
                 oib: client.oib,
-                status:client.cardStatus
+                status: client.cardStatus,
             };
 
             const response = await axios.post('http://localhost:8081/api/v1/card-request', newCardRequest);
             toast.success(`${response.data}`, { position: 'top-right' });
+
+            const updatedClientStatus = {
+                ...client,
+                cardStatus: 'SENT',
+            };
+
+            await axios.put(`http://localhost:8080/api/clients/${oib}`, updatedClientStatus);
+
+            const updatedClientResponse = await axios.get<Client>(`http://localhost:8080/api/clients/${oib}`);
+
+            const updatedClient = updatedClientResponse.data;
+
+            setClients(prevClients =>
+                prevClients.map(c =>
+                    c.oib === oib ? updatedClient : c
+                )
+            );
+
+            toast.success(`Status za klijenta s OIB-om: ${oib} uspješno ažuriran na "SENT"`, { position: 'top-right' });
+
         } catch (error) {
             if (error instanceof Error) {
                 toast.error(`Error sending client data: ${error.message}`, { position: 'top-right' });
             } else {
-                toast.error('An unknown error occurred while sending client data.', { position: 'top-right' });
+                toast.error('Došlo je do nepoznate greške prilikom slanja podataka klijenta.', { position: 'top-right' });
             }
         }
     };
+
+
+
 
     const handleEditClient = (client: Client) => {
         setCurrentClient(client);
